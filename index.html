@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>theyumtt | Portfolyo</title>
     <style>
+        /* Arka Plan Ayarı */
         body {
             margin: 0;
             font-family: 'Segoe UI', sans-serif;
-            background: url('background.jpg') no-repeat center center fixed;
+            background: url('background.png') no-repeat center center fixed;
             background-size: cover;
             color: white;
             display: flex;
@@ -17,6 +18,7 @@
             padding: 50px 20px;
         }
 
+        /* Profil Kısmı */
         .profile-section {
             text-align: center;
             margin-bottom: 40px;
@@ -28,14 +30,15 @@
         .profile-img {
             width: 150px;
             height: 150px;
-            border-radius: 50%;
-            border: 4px solid #38bdf8;
+            border-radius: 50%; /* Yuvarlak kesim */
+            border: 4px solid #38bdf8; /* Mavi çerçeve */
             object-fit: cover;
             margin-bottom: 15px;
         }
 
         h1 { margin: 0; font-size: 2.5rem; color: #38bdf8; }
 
+        /* Proje Kutuları (Grid) */
         .projects-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -67,7 +70,7 @@
     <div class="profile-section">
         <img src="profil.jpg" alt="Profil Fotoğrafı" class="profile-img">
         <h1>theyumtt</h1>
-        <p>Geliştirici</p>
+        <p>Geliştirici & Tasarımcı</p>
     </div>
 
     <h2 style="margin-bottom: 20px;">Projelerim</h2>
@@ -79,8 +82,8 @@
         </div>
 
         <div class="project-card">
-            <h3>Proje2</h3>
-            <p>Yakında...</p>
+            <h3>Proje Adı 2</h3>
+            <p>Buraya proje hakkında kısa bir açıklama yazabilirsin.</p>
         </div>
     </div>
 
