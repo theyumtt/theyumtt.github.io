@@ -235,10 +235,11 @@
             border: 1px solid rgba(56, 189, 248, 0.3);
         }
 
-        /* Buton Grubu - YENİ TASARIM */
+        /* Buton Grubu - DÜZENLENDİ */
         .button-group {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             gap: 12px;
             margin-top: auto;
         }
@@ -265,6 +266,11 @@
             transform: rotate(360deg);
         }
 
+        .download-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
         .download-btn {
             display: flex;
             align-items: center;
@@ -278,7 +284,6 @@
             font-size: 1.3rem;
             transition: all 0.3s ease;
             border: 2px solid rgba(56, 189, 248, 0.3);
-            margin-left: auto;
         }
 
         .download-btn:hover {
@@ -369,16 +374,18 @@
                 </div>
                 
                 <div class="button-group">
-                    <a href="https://github.com/theyumtt/easyportableinstall" target="_blank" class="github-circle-btn" title="Kodları İncele">
+                    <a href="https://github.com/theyumtt/easyportableinstall" target="_blank" class="github-circle-btn" title="GitHub'da İncele">
                         <i class="fab fa-github"></i>
                     </a>
                     
-                    <a href="https://theyumtt.github.io/depo/EasyInstaller-Linux.py" target="_blank" class="download-btn" title="İndir">
-                        <i class="fas fa-download"></i>
-                    </a>
-                    <a href="https://theyumtt.github.io/depo/EasyInstaller-Universal.py" target="_blank" class="download-btn" title="İndir">
-                        <i class="fas fa-download"></i>
-                    </a>
+                    <div class="download-buttons">
+                        <a href="https://theyumtt.github.io/depo/EasyInstaller-Linux.py" target="_blank" class="download-btn" title="Linux Sürümü İndir">
+                            <i class="fab fa-linux"></i>
+                        </a>
+                        <a href="https://theyumtt.github.io/depo/EasyInstaller-Universal.py" target="_blank" class="download-btn" title="Universal Sürüm İndir">
+                            <i class="fas fa-download"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
 
