@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İyi Ki Doğdun Yusuf! 🎂</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); /* Gece mavisi tonu, daha asil durur */
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 85%;
+            width: 450px;
+            transform: scale(0);
+            animation: bounceIn 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            position: relative;
+            z-index: 10;
+        }
+        @keyframes bounceIn {
+            to { transform: scale(1); }
+        }
+        h1 {
+            font-family: 'Pacifico', cursive;
+            color: #2a5298;
+            font-size: 2.5rem;
+            margin: 10px 0;
+        }
+        .highlight {
+            color: #d4af37; /* Altın rengi Yusuf ismi için */
+            font-weight: bold;
+        }
+        p {
+            color: #333;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            margin: 20px 0;
+        }
+        .emoji { font-size: 4rem; animation: pulse 2s infinite; }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .footer {
+            margin-top: 25px;
+            font-weight: 600;
+            color: #555;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            font-style: italic;
+        }
+        /* Arka plan kalpler */
+        .heart {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 20px;
+            animation: float 6s linear infinite;
+            bottom: -50px;
+        }
+        @keyframes float {
+            to { transform: translateY(-110vh) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="emoji">🎂</div>
+    <h1>İyi Ki Doğdun <span class="highlight">Yusuf!</span></h1>
+    <p>Yeni yaşın sana huzur, mutluluk ve tüm dileklerini getirsin dostum! Zor anlarda benim yanımda olduğun için sana teşekkür ediyorum.</p>
+    <div class="footer">Sen ve senin gibi arkadaşlar yüzyılda bir zor gelir! <br><strong>- Umut</strong></div>
+</div>
+
+<script>
+    // Konfeti Yağmuru
+    function celebrate() {
+        const duration = 10 * 1000;
+        const end = Date.now() + duration;
+
+        (function frame() {
+            confetti({
+                particleCount: 3,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 },
+                colors: ['#d4af37', '#ffffff', '#2a5298']
+            });
+            confetti({
+                particleCount: 3,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 },
+                colors: ['#d4af37', '#ffffff', '#2a5298']
+            });
+
+            if (Date.now() < end) {
+                requestAnimationFrame(frame);
+            }
+        }());
+    }
+
+    // Arka plan kalp animasyonu
+    function createHeart() {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.innerHTML = '❤️';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDuration = Math.random() * 3 + 3 + 's';
+        heart.style.opacity = Math.random();
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 6000);
+    }
+
+    window.onload = () => {
+        celebrate();
+        setInterval(createHeart, 400);
+    };
+</script>
+
+</body>
+</html>
