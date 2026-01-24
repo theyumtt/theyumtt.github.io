@@ -2,109 +2,138 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>İyi Ki Doğdun Yusuf! 🎂</title>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
+        * { box-sizing: border-box; }
+        
         body {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); /* Gece mavisi tonu, daha asil durur */
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             height: 100vh;
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             font-family: 'Poppins', sans-serif;
-            overflow: hidden;
+            overflow: hidden; /* Kaydırmayı engeller, tam ekran hissi verir */
+            padding: 20px;
         }
+
         .container {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 40px;
-            border-radius: 30px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            background: rgba(255, 255, 255, 0.98);
+            padding: 30px 20px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
             text-align: center;
-            max-width: 85%;
-            width: 450px;
+            width: 100%;
+            max-width: 350px; /* Telefonlar için ideal genişlik */
             transform: scale(0);
-            animation: bounceIn 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            animation: bounceIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
             position: relative;
             z-index: 10;
         }
+
         @keyframes bounceIn {
             to { transform: scale(1); }
         }
+
+        .emoji { 
+            font-size: 3.5rem; 
+            margin-bottom: 10px;
+            display: block;
+            animation: floatEmoji 3s ease-in-out infinite;
+        }
+
+        @keyframes floatEmoji {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
         h1 {
             font-family: 'Pacifico', cursive;
             color: #2a5298;
-            font-size: 2.5rem;
-            margin: 10px 0;
+            font-size: 1.8rem; /* Mobilde taşmaması için küçültüldü */
+            margin: 0 0 15px 0;
+            line-height: 1.2;
         }
+
         .highlight {
-            color: #d4af37; /* Altın rengi Yusuf ismi için */
-            font-weight: bold;
+            color: #d4af37;
+            display: block; /* İsmi alt satıra alıp vurgular */
+            font-size: 2.2rem;
         }
+
         p {
-            color: #333;
-            font-size: 1.15rem;
-            line-height: 1.8;
-            margin: 20px 0;
+            color: #444;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
         }
-        .emoji { font-size: 4rem; animation: pulse 2s infinite; }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
+
         .footer {
-            margin-top: 25px;
-            font-weight: 600;
-            color: #555;
+            font-size: 0.9rem;
+            color: #666;
             border-top: 1px solid #eee;
             padding-top: 15px;
             font-style: italic;
         }
-        /* Arka plan kalpler */
+
+        .footer strong {
+            color: #2a5298;
+            font-size: 1.1rem;
+        }
+
+        /* Arka plan kalpleri mobilde kasmaması için optimize edildi */
         .heart {
             position: absolute;
-            color: rgba(255, 255, 255, 0.3);
-            font-size: 20px;
-            animation: float 6s linear infinite;
+            pointer-events: none;
+            z-index: 1;
             bottom: -50px;
+            animation: floatUp 5s linear forwards;
         }
-        @keyframes float {
-            to { transform: translateY(-110vh) rotate(360deg); }
+
+        @keyframes floatUp {
+            to {
+                transform: translateY(-120vh) rotate(360deg);
+                opacity: 0;
+            }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="emoji">🎂</div>
+    <span class="emoji">🎂</span>
     <h1>İyi Ki Doğdun <span class="highlight">Yusuf!</span></h1>
     <p>Yeni yaşın sana huzur, mutluluk ve tüm dileklerini getirsin dostum! Zor anlarda benim yanımda olduğun için sana teşekkür ediyorum.</p>
-    <div class="footer">Sen ve senin gibi arkadaşlar yüzyılda bir zor gelir! <br><strong>- Umut</strong></div>
+    <div class="footer">
+        Sen ve senin gibi arkadaşlar yüzyılda bir zor gelir!<br>
+        <strong>- Umut</strong>
+    </div>
 </div>
 
 <script>
-    // Konfeti Yağmuru
-    function celebrate() {
-        const duration = 10 * 1000;
-        const end = Date.now() + duration;
+    // Başlangıç konfetisi
+    function launchConfetti() {
+        const end = Date.now() + 5 * 1000;
+        const colors = ['#d4af37', '#2a5298', '#ffffff'];
 
         (function frame() {
             confetti({
-                particleCount: 3,
+                particleCount: 2,
                 angle: 60,
                 spread: 55,
-                origin: { x: 0 },
-                colors: ['#d4af37', '#ffffff', '#2a5298']
+                origin: { x: 0, y: 0.8 },
+                colors: colors
             });
             confetti({
-                particleCount: 3,
+                particleCount: 2,
                 angle: 120,
                 spread: 55,
-                origin: { x: 1 },
-                colors: ['#d4af37', '#ffffff', '#2a5298']
+                origin: { x: 1, y: 0.8 },
+                colors: colors
             });
 
             if (Date.now() < end) {
@@ -113,21 +142,22 @@
         }());
     }
 
-    // Arka plan kalp animasyonu
+    // Mobilde kasmayan hafif kalp efekti
     function createHeart() {
         const heart = document.createElement('div');
-        heart.classList.add('heart');
+        heart.className = 'heart';
         heart.innerHTML = '❤️';
         heart.style.left = Math.random() * 100 + 'vw';
-        heart.style.animationDuration = Math.random() * 3 + 3 + 's';
-        heart.style.opacity = Math.random();
+        heart.style.fontSize = (Math.random() * 10 + 15) + 'px';
+        heart.style.opacity = Math.random() * 0.5 + 0.3;
         document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 6000);
+        
+        setTimeout(() => heart.remove(), 5000);
     }
 
     window.onload = () => {
-        celebrate();
-        setInterval(createHeart, 400);
+        launchConfetti();
+        setInterval(createHeart, 600);
     };
 </script>
 
