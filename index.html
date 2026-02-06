@@ -24,7 +24,6 @@
         <div class="loader"><div class="progress"></div></div>
         <a id="manual" href="#" class="btn" style="display:none;">Git</a>
     </div>
-
     <script>
         // --- LİNKLERİ BURAYA EKLE ---
         const linkler = {
@@ -35,17 +34,37 @@
         };
         // ----------------------------
 
-        const path = window.location.pathname.split('/').pop();
+        // ESKİ HATALI KOD:
+        // const path = window.location.pathname.split('/').pop();
+
+        // YENİ DÜZELTİLMİŞ KOD:
+        // URL'deki '?git=' kısmından sonrasını alır
+        const params = new URLSearchParams(window.location.search);
+        const path = params.get('git'); 
+
         const hedef = linkler[path];
 
         if (hedef) {
+            // Başarılı ise yönlendir
             setTimeout(() => { window.location.href = hedef; }, 1500);
+            
+            // Manuel butonunu aktif et
             document.getElementById('manual').href = hedef;
             document.getElementById('manual').style.display = "inline-block";
+            
+            // Ekrana nereye gittiğini yazalım (Opsiyonel)
+            document.getElementById('msg').innerText = path.toUpperCase() + "'a gidiliyor...";
         } else {
+            // Link bulunamadıysa
             document.getElementById('msg').innerText = "Link bulunamadı!";
-            document.getElementById('msg').style.color = "#ff7b72";
-            setTimeout(() => { window.location.href = "/"; }, 3000);
+            document.getElementById('msg').style.color = "#ff7b72"; // Kırmızı hata rengi
+            document.querySelector('.progress').style.backgroundColor = "#ff7b72"; // Loader kırmızı olsun
+            
+            // 3 saniye sonra ana sayfaya (veya istediğin yere) at
+            setTimeout(() => { 
+                // Eğer '?git=' yoksa bir şey yapma veya ana sayfaya yönlendir
+                // window.location.href = "https://theyumtt.github.io"; 
+            }, 3000);
         }
     </script>
 </body>
