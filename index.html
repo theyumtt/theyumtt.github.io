@@ -1,10 +1,52 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="refresh" content="0; url=https://youtu.be/Uir2LTJO7s4?si=HgSfbDp959peh1Ww/" />
-    <title>Yönlendiriliyorsunuz...</title>
-  </head>
-  <body>
-    <p>Eğer yönlendirilmediyseniz <a href="https://youtu.be/Uir2LTJO7s4?si=HgSfbDp959peh1Ww">buraya tıklayın</a>.</p>
-  </body>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>theyumtt | Yönlendirme</title>
+    <style>
+        :root { --bg: #0d1117; --text: #c9d1d9; --accent: #58a6ff; }
+        body { background: var(--bg); color: var(--text); font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
+        .card { text-align: center; padding: 2rem; border: 1px solid #30363d; border-radius: 12px; background: #161b22; box-shadow: 0 8px 24px rgba(0,0,0,0.5); max-width: 300px; width: 90%; }
+        .logo { width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--accent); padding: 5px; margin-bottom: 15px; }
+        h1 { font-size: 1.2rem; margin: 10px 0; color: white; }
+        .loader { width: 100%; height: 4px; background: #21262d; border-radius: 10px; margin: 20px 0; overflow: hidden; }
+        .progress { width: 0%; height: 100%; background: var(--accent); animation: load 1.5s ease-in-out forwards; }
+        @keyframes load { to { width: 100%; } }
+        .btn { display: inline-block; padding: 8px 16px; border-radius: 6px; background: var(--accent); color: white; text-decoration: none; font-size: 0.9rem; font-weight: bold; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <img src="https://github.com/theyumtt.png" alt="logo" class="logo">
+        <h1>theyumtt</h1>
+        <p id="msg">Yönlendiriliyorsunuz...</p>
+        <div class="loader"><div class="progress"></div></div>
+        <a id="manual" href="#" class="btn" style="display:none;">Git</a>
+    </div>
+
+    <script>
+        // --- LİNKLERİ BURAYA EKLE ---
+        const linkler = {
+            "ig": "https://instagram.com/theyumtt",
+            "yt": "https://youtube.com/@theyumtt",
+            "dc": "https://discord.gg/davet-kodun",
+            "steam": "https://steamcommunity.com/id/theyumtt"
+        };
+        // ----------------------------
+
+        const path = window.location.pathname.split('/').pop();
+        const hedef = linkler[path];
+
+        if (hedef) {
+            setTimeout(() => { window.location.href = hedef; }, 1500);
+            document.getElementById('manual').href = hedef;
+            document.getElementById('manual').style.display = "inline-block";
+        } else {
+            document.getElementById('msg').innerText = "Link bulunamadı!";
+            document.getElementById('msg').style.color = "#ff7b72";
+            setTimeout(() => { window.location.href = "/"; }, 3000);
+        }
+    </script>
+</body>
 </html>
