@@ -1,1 +1,220 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>İyi Ki Doğdun Berke! 🎉</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        * { box-sizing: border-box; }
 
+        body {
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Nunito', sans-serif;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle var(--dur) ease-in-out infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.4); }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.97);
+            padding: 35px 25px;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,200,50,0.3);
+            text-align: center;
+            width: 100%;
+            max-width: 360px;
+            transform: scale(0) rotate(-5deg);
+            animation: popIn 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.2s forwards;
+            position: relative;
+            z-index: 10;
+        }
+
+        @keyframes popIn {
+            to { transform: scale(1) rotate(0deg); }
+        }
+
+        .emoji-row {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+            display: block;
+            animation: bounce 2s ease-in-out infinite;
+            letter-spacing: 4px;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        h1 {
+            font-family: 'Pacifico', cursive;
+            color: #203a43;
+            font-size: 1.75rem;
+            margin: 10px 0 6px 0;
+            line-height: 1.2;
+        }
+
+        .highlight {
+            color: #e8a020;
+            display: block;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 0px rgba(232,160,32,0.2);
+            animation: colorPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes colorPulse {
+            0%, 100% { color: #e8a020; }
+            50% { color: #f0c040; }
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #e8a020, transparent);
+        }
+
+        .divider span { font-size: 1.1rem; }
+
+        p {
+            color: #3a3a3a;
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .footer {
+            font-size: 0.88rem;
+            color: #666;
+            border-top: 1px dashed #ddd;
+            padding-top: 14px;
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        .footer strong {
+            color: #203a43;
+            font-size: 1.05rem;
+            font-style: normal;
+            font-weight: 800;
+        }
+
+        .balloon {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1;
+            bottom: -80px;
+            animation: floatBalloon 6s ease-in-out forwards;
+            font-size: 1.8rem;
+            user-select: none;
+        }
+
+        @keyframes floatBalloon {
+            0% { transform: translateY(0) rotate(-5deg); opacity: 0.8; }
+            50% { transform: translateY(-60vh) rotate(5deg); }
+            100% { transform: translateY(-130vh) rotate(-3deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div class="container">
+    <span class="emoji-row">🎉 🎊 🎈</span>
+    <h1>İyi Ki Doğdun <span class="highlight">Berke!</span></h1>
+
+    <div class="divider"><span>✨</span></div>
+
+    <p>Selam Berke! Uzun süredir pek samimiyetimiz bulunmasa da doğum gününü kutlamak istedim. Yeni yaşın sana başarı, neşe ve güzel anlar getirsin!</p>
+
+    <div class="footer">
+🤝<br><br>
+        <strong>— Umut</strong>
+    </div>
+</div>
+
+<script>
+    // Yıldızları oluştur
+    const starsContainer = document.getElementById('stars');
+    for (let i = 0; i < 60; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        const size = Math.random() * 3 + 1;
+        star.style.cssText = `
+            width: ${size}px;
+            height: ${size}px;
+            top: ${Math.random() * 100}%;
+            left: ${Math.random() * 100}%;
+            --dur: ${Math.random() * 3 + 2}s;
+            animation-delay: ${Math.random() * 3}s;
+        `;
+        starsContainer.appendChild(star);
+    }
+
+    // Konfeti
+    function launchConfetti() {
+        const end = Date.now() + 5000;
+        const colors = ['#e8a020', '#203a43', '#ffffff', '#f0c040', '#2c5364'];
+
+        (function frame() {
+            confetti({ particleCount: 3, angle: 60, spread: 60, origin: { x: 0, y: 0.85 }, colors });
+            confetti({ particleCount: 3, angle: 120, spread: 60, origin: { x: 1, y: 0.85 }, colors });
+            if (Date.now() < end) requestAnimationFrame(frame);
+        })();
+    }
+
+    // Balon efekti
+    const balloonEmojis = ['🎈', '🎊', '🎉', '⭐', '🌟'];
+    function createBalloon() {
+        const b = document.createElement('div');
+        b.className = 'balloon';
+        b.innerHTML = balloonEmojis[Math.floor(Math.random() * balloonEmojis.length)];
+        b.style.left = Math.random() * 100 + 'vw';
+        b.style.animationDuration = (Math.random() * 3 + 5) + 's';
+        document.body.appendChild(b);
+        setTimeout(() => b.remove(), 8000);
+    }
+
+    window.onload = () => {
+        launchConfetti();
+        setInterval(createBalloon, 700);
+    };
+</script>
+
+</body>
+</html>
