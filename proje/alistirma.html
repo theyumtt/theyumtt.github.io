@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alıştırma!</title>
+    <style>
+        /* Tüm sayfa için sadece Comic Sans ayarı */
+        body {
+            font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+            background-color: #f7f9fc;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        #quiz-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h2, h3 {
+            color: #2c3e50;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        button {
+            font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+        }
+
+        .option-btn {
+            display: block;
+            width: 100%;
+            text-align: left;
+            background-color: #eef2f5;
+            border: 2px solid #eef2f5;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            background-color: #e1e6eb;
+            transform: scale(1.02);
+        }
+
+        .option-btn.correct {
+            background-color: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .option-btn.wrong {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        #next-btn, .restart-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            display: none;
+            transition: background-color 0.2s;
+        }
+
+        #next-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .restart-btn {
+            background-color: #28a745;
+            display: inline-block;
+        }
+
+        .restart-btn:hover {
+            background-color: #218838;
+        }
+
+        .status {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+        }
+
+        #result-screen {
+            text-align: center;
+            display: none;
+        }
+
+        #result-screen h3 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: #ff9800;
+        }
+
+        #final-score {
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div id="quiz-container">
+    <div id="question-screen">
+        <div class="status">
+            <span id="question-counter">Soru 1 / 9</span>
+            <span id="score-display">Puan: 0</span>
+        </div>
+        <h2 id="question-text">Soru metni buraya gelecek</h2>
+        <div id="options-container">
+            </div>
+        <button id="next-btn" onclick="nextQuestion()">Sonraki Soru</button>
+    </div>
+
+    <div id="result-screen">
+        <h3>Test Bitti! 🎈</h3>
+        <p id="final-score">Toplam Puan: 0 / 9</p>
+        <button class="restart-btn" onclick="restartQuiz()">Testi Yeniden Başlat</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            question: "Yaz aylarında insanların genellikle beyaz renkli kıyafetler giymeyi tercih etmesinin temel nedeni aşağıdakilerden hangisidir?",
+            options: {
+                "A": "Beyaz giysilerin ısıyı içinde tutması",
+                "B": "Beyaz ışığın tamamını yansıtması",
+                "C": "Beyaz ışığı çoğunu soğurması",
+                "D": "Beyazın sadece güneş ışığını emmesi"
+            },
+            answer: "B"
+        },
+        {
+            question: "Işığın cisimler tarafından emilmesine ve hapsedilmesine ne ad verilir?",
+            options: {
+                "A": "Işığın soğurulması",
+                "B": "Işığın yayılması",
+                "C": "Işığın yanması",
+                "D": "Işığın kırılması"
+            },
+            answer: "A"
+        },
+        {
+            question: "Karanlık bir odada bulunan beyaz renkli bir kâğıda yalnızca yeşil ışık yayan bir el feneri tutuluyor. Buna göre, kâğıt gözümüze hangi renkte görünür?",
+            options: {
+                "A": "Siyah (Hiç görünmez)",
+                "B": "Yeşil",
+                "C": "Beyaz",
+                "D": "Sarı"
+            },
+            answer: "B"
+        },
+        {
+            question: "Günlük hayatta renksiz olduğunu düşündüğümüz Güneş'ten gelen 'beyaz ışık' ile ilgili aşağıdakilerden hangisi doğrudur?",
+            options: {
+                "A": "Yalnızca sarı ve turuncu ışığın karışımıdır.",
+                "B": "İçinde hiçbir renk barındırmaz.",
+                "C": "Sadece kırmızı, mavi ve yeşil renklerden oluşur.",
+                "D": "Birçok farklı rengin birleşiminden oluşur."
+            },
+            answer: "D"
+        },
+        {
+            question: "Beyaz ışığın içindeki renkleri ayrıştırmak (kırmak) için aşağıdakilerden hangisi kullanılır?",
+            options: {
+                "A": "Büyüteç",
+                "B": "Düz ayna",
+                "C": "Opak levha",
+                "D": "Camdan yapılmış üçgen prizma"
+            },
+            answer: "D"
+        },
+        {
+            question: "Doğada gökkuşaklarının oluşması, hangi varlıkların devasa birer prizma gibi davranması sonucunda gerçekleşir?",
+            options: {
+                "A": "Güneş lekelerinin",
+                "B": "Yağmur damlalarının",
+                "C": "Bulutların",
+                "D": "Havadaki gazların"
+            },
+            answer: "B"
+        },
+        {
+            question: "Beyaz ışık kırılmaya uğradığında oluşan ışık tayfında (spektrumunda) aşağıdaki renklerden hangisi yer almaz?",
+            options: {
+                "A": "Kahverengi",
+                "B": "Turuncu",
+                "C": "Mor",
+                "D": "Yeşil"
+            },
+            answer: "A"
+        },
+        {
+            question: "Projedeki bilgilere göre, siyah bir yüzeyin ışığa karşı gösterdiği davranış aşağıdakilerden hangisidir?",
+            options: {
+                "A": "Işığın tamamını yansıtır.",
+                "B": "Sadece kırmızı ışığı yansıtır.",
+                "C": "Işığı kırarak renklerine ayırır.",
+                "D": "Işığın tamamını soğurur."
+            },
+            answer: "D"
+        },
+        {
+            question: "Soğuk bir kış gününde dışarı çıkan bir kişi, güneş ışığından en fazla faydalanıp daha sıcak kalabilmek için hangi renk mont giymelidir?",
+            options: {
+                "A": "Siyah",
+                "B": "Sarı",
+                "C": "Beyaz",
+                "D": "Açık Mavi"
+            },
+            answer: "A"
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    const questionText = document.getElementById("question-text");
+    const optionsContainer = document.getElementById("options-container");
+    const nextBtn = document.getElementById("next-btn");
+    const questionCounter = document.getElementById("question-counter");
+    const scoreDisplay = document.getElementById("score-display");
+    const questionScreen = document.getElementById("question-screen");
+    const resultScreen = document.getElementById("result-screen");
+    const finalScoreText = document.getElementById("final-score");
+
+    function loadQuestion() {
+        nextBtn.style.display = "none";
+        const currentQ = questions[currentQuestionIndex];
+
+        questionCounter.innerText = `Soru ${currentQuestionIndex + 1} / ${questions.length}`;
+        questionText.innerText = currentQ.question;
+
+        optionsContainer.innerHTML = "";
+
+        for (const [key, value] of Object.entries(currentQ.options)) {
+            const btn = document.createElement("button");
+            btn.className = "option-btn";
+            btn.innerText = `${key}: ${value}`;
+            btn.onclick = () => checkAnswer(btn, key, currentQ.answer);
+            optionsContainer.appendChild(btn);
+        }
+    }
+
+    function checkAnswer(selectedBtn, selectedKey, correctKey) {
+        const allBtns = optionsContainer.querySelectorAll(".option-btn");
+        allBtns.forEach(btn => btn.disabled = true);
+
+        if (selectedKey === correctKey) {
+            selectedBtn.classList.add("correct");
+            score++;
+            scoreDisplay.innerText = `Puan: ${score}`;
+        } else {
+            selectedBtn.classList.add("wrong");
+            allBtns.forEach(btn => {
+                if (btn.innerText.startsWith(correctKey)) {
+                    btn.classList.add("correct");
+                }
+            });
+        }
+
+        nextBtn.style.display = "block";
+        if (currentQuestionIndex === questions.length - 1) {
+            nextBtn.innerText = "Sonuçları Gör";
+        }
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < questions.length) {
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        questionScreen.style.display = "none";
+        resultScreen.style.display = "block";
+        finalScoreText.innerText = `Toplam Puan: ${score} / ${questions.length}`;
+    }
+
+    function restartQuiz() {
+        currentQuestionIndex = 0;
+        score = 0;
+        scoreDisplay.innerText = `Puan: 0`;
+        nextBtn.innerText = "Sonraki Soru";
+        questionScreen.style.display = "block";
+        resultScreen.style.display = "none";
+        loadQuestion();
+    }
+
+    loadQuestion();
+</script>
+
+</body>
+</html>
