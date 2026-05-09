@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alıştırma!</title>
+    <title>Işık ve Renkler Testi</title>
     <style>
-        /* Tüm sayfa için sadece Comic Sans ayarı */
+        /* Modern ve standart sistem fontları */
         body {
-            font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: #f7f9fc;
             color: #333;
             display: flex;
@@ -17,12 +17,12 @@
             margin: 0;
             padding: 20px;
         }
-
+        
         #quiz-container {
             background-color: #fff;
             padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             width: 100%;
             max-width: 600px;
         }
@@ -32,32 +32,32 @@
         }
 
         h2 {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             line-height: 1.5;
             margin-bottom: 20px;
+            font-weight: 600;
         }
 
         button {
-            font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+            font-family: inherit; /* Tarayıcı fontunu miras alır */
         }
 
         .option-btn {
             display: block;
             width: 100%;
             text-align: left;
-            background-color: #eef2f5;
-            border: 2px solid #eef2f5;
+            background-color: #f0f4f8;
+            border: 2px solid #f0f4f8;
             padding: 12px 15px;
             margin-bottom: 10px;
-            border-radius: 10px;
+            border-radius: 8px;
             cursor: pointer;
-            font-size: 1.1rem;
+            font-size: 1rem;
             transition: all 0.2s;
         }
 
         .option-btn:hover {
-            background-color: #e1e6eb;
-            transform: scale(1.02);
+            background-color: #e1e8ed;
         }
 
         .option-btn.correct {
@@ -74,17 +74,16 @@
 
         .option-btn:disabled {
             cursor: not-allowed;
-            transform: none;
         }
 
         #next-btn, .restart-btn {
             background-color: #007bff;
             color: white;
             border: none;
-            padding: 15px 20px;
-            border-radius: 10px;
-            font-size: 1.2rem;
-            font-weight: bold;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 500;
             cursor: pointer;
             width: 100%;
             margin-top: 15px;
@@ -106,12 +105,12 @@
         }
 
         .status {
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             color: #666;
             margin-bottom: 15px;
             display: flex;
             justify-content: space-between;
-            font-weight: bold;
+            font-weight: 500;
         }
 
         #result-screen {
@@ -120,14 +119,14 @@
         }
 
         #result-screen h3 {
-            font-size: 2.2rem;
+            font-size: 2rem;
             margin-bottom: 10px;
-            color: #ff9800;
+            color: #28a745;
         }
-
+        
         #final-score {
-            font-size: 1.4rem;
-            font-weight: bold;
+            font-size: 1.2rem;
+            font-weight: 500;
         }
     </style>
 </head>
@@ -141,12 +140,13 @@
         </div>
         <h2 id="question-text">Soru metni buraya gelecek</h2>
         <div id="options-container">
-            </div>
+            <!-- Şıklar buraya JavaScript ile eklenecek -->
+        </div>
         <button id="next-btn" onclick="nextQuestion()">Sonraki Soru</button>
     </div>
 
     <div id="result-screen">
-        <h3>Test Bitti! 🎈</h3>
+        <h3>Test Bitti!</h3>
         <p id="final-score">Toplam Puan: 0 / 9</p>
         <button class="restart-btn" onclick="restartQuiz()">Testi Yeniden Başlat</button>
     </div>
@@ -261,12 +261,12 @@
     function loadQuestion() {
         nextBtn.style.display = "none";
         const currentQ = questions[currentQuestionIndex];
-
+        
         questionCounter.innerText = `Soru ${currentQuestionIndex + 1} / ${questions.length}`;
         questionText.innerText = currentQ.question;
-
+        
         optionsContainer.innerHTML = "";
-
+        
         for (const [key, value] of Object.entries(currentQ.options)) {
             const btn = document.createElement("button");
             btn.className = "option-btn";
