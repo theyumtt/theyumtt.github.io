@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scripta - Dijital Not Üretici</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #2c3e50;
+            --sidebar-width: 350px;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sol Menü */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: #fff;
+            padding: 20px 25px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 10;
+            overflow-y: auto;
+        }
+        .sidebar h2 { margin: 0 0 5px 0; font-size: 1.8rem; color: #333; border-bottom: 2px solid #eee; padding-bottom: 10px; font-weight: 800;}
+        .control-group { display: flex; flex-direction: column; gap: 6px; }
+        .control-row { display: flex; gap: 10px; }
+        .control-row > div { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+
+        label { font-weight: bold; font-size: 0.85rem; color: #444; display: flex; justify-content: space-between; }
+        label span { color: #0d6efd; font-weight: bold; }
+        select, input[type="date"] { padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 0.9rem; outline: none; width: 100%; box-sizing: border-box; }
+        input[type="range"] { width: 100%; cursor: pointer; }
+
+        button {
+            padding: 12px; background-color: #0d6efd; color: white; border: none;
+            border-radius: 6px; cursor: pointer; transition: 0.2s; font-weight: bold;
+            font-size: 1rem; margin-top: 5px;
+        }
+        button:hover { background-color: #0b5ed7; }
+        button.pdf-btn { background-color: #dc3545; margin-bottom: 5px; }
+        button.pdf-btn:hover { background-color: #bb2d3b; }
+        button:disabled { background-color: #6c757d; cursor: not-allowed; }
+
+        /* Sayfa Hafızası Alanı */
+        .memory-box {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #dee2e6;
+        }
+        .memory-box span { font-weight: bold; font-size: 1rem; color: #333; }
+        .memory-box .btn-add { background-color: #198754; font-size: 0.9rem; width: 100%; margin-top: 10px; }
+        .memory-box .btn-add:hover { background-color: #157347; }
+        .memory-box .btn-clear { background-color: #6c757d; font-size: 0.85rem; width: 100%; margin-top: 5px; padding: 8px;}
+        .memory-box .btn-clear:hover { background-color: #5c636a; }
+
+        /* Sağ Alan (Önizleme) */
+        .preview-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            overflow: auto;
+            padding: 40px;
+        }
+
+        #export-canvas {
+            width: 794px;
+            height: 1123px;
+            position: relative;
+            background-color: #fff;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transform: scale(0.85);
+            transform-origin: top center;
+            margin-bottom: -150px;
+        }
+
+        .canvas-area.preset-notebook {
+            background-image: url('https://raw.githubusercontent.com/theyumtt/theyumtt.github.io/refs/heads/main/depo/img/bg.png');
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .canvas-area [contenteditable="true"] {
+            position: absolute;
+            background-color: transparent !important;
+            outline: none;
+            border: none;
+            box-sizing: border-box;
+        }
+        .canvas-area [contenteditable="true"]:hover {
+            background-color: rgba(0, 123, 255, 0.05) !important;
+            border-radius: 4px;
+            box-shadow: 0 0 0 1px rgba(0, 123, 255, 0.2);
+        }
+
+        .preset-notebook .title-box {
+            top: 75px;
+            left: 110px;
+            width: 400px;
+            font-family: 'Open Sauce', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 800;
+            line-height: 1;
+            color: #000;
+        }
+
+        .preset-notebook .date-box {
+            top: 74px;
+            right: 80px;
+            width: 150px;
+            text-align: center;
+            font-family: 'Caveat', cursive;
+            font-size: 1.3rem;
+            color: #2962ff;
+            letter-spacing: 2px;
+        }
+
+        .preset-notebook .main-text {
+            top: 178px;
+            line-height: 38px;
+            left: 110px;
+            right: 60px;
+            bottom: 120px;
+            font-family: 'EB Garamond', serif;
+            font-size: 1.35rem;
+            color: #111;
+            overflow: hidden;
+        }
+
+        .preset-notebook .footer-box {
+            bottom: 45px;
+            left: 110px;
+            right: 60px;
+            text-align: center;
+            font-family: 'EB Garamond', serif;
+            font-size: 1.2rem;
+            font-style: italic;
+        }
+        .preset-notebook .footer-box span {
+            font-family: 'Open Sauce', sans-serif;
+            font-weight: bold;
+            font-style: normal;
+            display: block;
+            margin-top: 5px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2 id="lbl-apptitle">Scripta</h2>
+
+        <div class="control-row">
+            <div>
+                <label id="lbl-lang">Dil / Lang:</label>
+                <select id="langSelect" onchange="userChangedLanguage()">
+                    <option value="en">English</option>
+                    <option value="tr">Türkçe</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label id="lbl-date">Custom Date:</label>
+            <input type="date" id="customDate" onchange="updateDateDisplay()">
+        </div>
+
+        <div class="memory-box">
+            <span id="lbl-pagecounttext">Pages in Memory:</span> <span id="page-count">0</span>
+            <button id="btnAddPage" class="btn-add" onclick="addPageToMemory()">➕ Add Page</button>
+            <button id="btnClearPages" class="btn-clear" onclick="clearMemory()">🗑️ Clear Memory</button>
+            <div id="lbl-memoryhint" style="font-size: 0.75rem; color: #666; margin-top: 8px;">(Save multiple pages for PDF/ZIP export)</div>
+        </div>
+
+        <div class="control-group" style="background: #f8f9fa; padding: 10px; border-radius: 6px; border: 1px solid #eee;">
+            <div style="font-size: 0.8rem; color: #666; margin-bottom: 8px; text-align: center;" id="lbl-alignhint">✨ Pixel-Perfect Alignment</div>
+
+            <label id="lbl-spacing">Line Spacing: <span id="lh-val">38px</span></label>
+            <input type="range" id="lineHeightSlider" min="20" max="60" step="0.5" value="38" oninput="adjustAlignment()">
+
+            <label id="lbl-position" style="margin-top: 8px;">Top Offset: <span id="top-val">178px</span></label>
+            <input type="range" id="topOffsetSlider" min="150" max="220" step="1" value="178" oninput="adjustAlignment()">
+        </div>
+
+        <div class="control-group">
+            <label id="lbl-quality">Export Quality:</label>
+            <select id="qualitySelect">
+                <option value="1">Standard (1x)</option>
+                <option value="2" selected>High (2x)</option>
+                <option value="3">Very High (3x)</option>
+            </select>
+        </div>
+
+        <button id="pngBtn" onclick="exportPNG()">🖼️ Download PNG(s)</button>
+        <button id="pdfBtn" class="pdf-btn" onclick="exportPDF()">📄 Download PDF</button>
+
+    </div>
+
+    <div class="preview-container">
+        <div id="export-canvas" class="canvas-area preset-notebook">
+            <div class="title-box" id="text-title" contenteditable="true">TITLE GOES HERE</div>
+            <div class="date-box" id="date-display" contenteditable="true">04.06.2026</div>
+            <div class="main-text" id="text-main" contenteditable="true">
+                Hello there!!<br>
+                Welcome to Scripta.<br><br>
+                You can now save multiple pages using the "Add Page" button! If you add multiple pages, the PDF button will create a multi-page document, and the PNG button will download a ZIP file containing all your pages.
+            </div>
+            <div class="footer-box" contenteditable="true">
+                <span id="quote-text" style="font-family: 'EB Garamond'; font-weight: normal; font-style: italic;">“Great things are done by great nations.”</span>
+                <span id="quote-author">MUSTAFA KEMAL ATATÜRK</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sayfa Hafızası (DataURL'leri Tutar)
+        let pagesMemory = [];
+
+        const dict = {
+            tr: {
+                apptitle: "Scripta",
+                lang: "Dil / Lang:",
+                date: "Özel Tarih:",
+                pagecounttext: "Hafızadaki Sayfa:",
+                addPage: "➕ Sayfayı Ekle",
+                clearPage: "🗑️ Hafızayı Temizle",
+                memoryhint: "(Çoklu PDF/ZIP için sayfaları biriktir)",
+                alignhint: "✨ Milimetrik Hizalama Ayarları",
+                spacing: "Satır Aralığı:",
+                position: "Yukarı/Aşağı:",
+                quality: "Çıktı Kalitesi:",
+                png: "🖼️ PNG İndir",
+                pdf: "📄 PDF İndir",
+                preparing: "⏳ İşleniyor...",
+                quoteText: "“Büyük şeyleri büyük milletler yapar.”",
+                quoteAuthor: "MUSTAFA KEMAL ATATÜRK",
+                placeholderTitle: "BAŞLIK BURAYA",
+                placeholderText: "Selamlar!!\nScripta'ya hoş geldin.\n\nArtık 'Sayfayı Ekle' butonunu kullanarak çoklu sayfa oluşturabilirsin! Birden fazla sayfa eklersen PDF çok sayfalı olur, PNG ise tüm sayfaları içeren bir ZIP dosyası olarak iner."
+            },
+            en: {
+                apptitle: "Scripta",
+                lang: "Language:",
+                date: "Custom Date:",
+                pagecounttext: "Pages in Memory:",
+                addPage: "➕ Add Page",
+                clearPage: "🗑️ Clear Memory",
+                memoryhint: "(Save multiple pages for PDF/ZIP export)",
+                alignhint: "✨ Pixel-Perfect Alignment",
+                spacing: "Line Spacing:",
+                position: "Top Offset:",
+                quality: "Export Quality:",
+                png: "🖼️ Download PNG(s)",
+                pdf: "📄 Download PDF",
+                preparing: "⏳ Processing...",
+                quoteText: "“Great things are done by great nations.”",
+                quoteAuthor: "MUSTAFA KEMAL ATATÜRK",
+                placeholderTitle: "TITLE GOES HERE",
+                placeholderText: "Hello there!!<br>Welcome to Scripta.<br><br>You can now save multiple pages using the 'Add Page' button! If you add multiple pages, the PDF button will create a multi-page document, and the PNG button will download a ZIP file containing all your pages."
+            }
+        };
+
+        let currentLang = 'en';
+
+        window.onload = function() {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+
+            document.getElementById('customDate').value = `${yyyy}-${mm}-${dd}`;
+            document.getElementById('date-display').innerText = `${dd} / ${mm} / ${yyyy}`;
+
+            const userLang = navigator.language || navigator.userLanguage;
+            if (userLang.toLowerCase().startsWith('tr')) {
+                currentLang = 'tr';
+            } else {
+                currentLang = 'en';
+            }
+
+            document.getElementById('langSelect').value = currentLang;
+            applyLanguage();
+        };
+
+        function userChangedLanguage() {
+            currentLang = document.getElementById('langSelect').value;
+            applyLanguage();
+        }
+
+        function applyLanguage() {
+            const t = dict[currentLang];
+            document.getElementById('lbl-apptitle').innerText = t.apptitle;
+            document.getElementById('lbl-lang').innerText = t.lang;
+            document.getElementById('lbl-date').innerText = t.date;
+            document.getElementById('lbl-pagecounttext').innerText = t.pagecounttext;
+            document.getElementById('btnAddPage').innerText = t.addPage;
+            document.getElementById('btnClearPages').innerText = t.clearPage;
+            document.getElementById('lbl-memoryhint').innerText = t.memoryhint;
+            document.getElementById('lbl-alignhint').innerText = t.alignhint;
+            document.getElementById('lbl-spacing').innerHTML = `${t.spacing} <span id="lh-val">${document.getElementById('lineHeightSlider').value}px</span>`;
+            document.getElementById('lbl-position').innerHTML = `${t.position} <span id="top-val">${document.getElementById('topOffsetSlider').value}px</span>`;
+            document.getElementById('lbl-quality').innerText = t.quality;
+            document.getElementById('pngBtn').innerText = t.png;
+            document.getElementById('pdfBtn').innerText = t.pdf;
+
+            document.getElementById('quote-text').innerText = t.quoteText;
+            document.getElementById('quote-author').innerText = t.quoteAuthor;
+            document.getElementById('text-title').innerText = t.placeholderTitle;
+            document.getElementById('text-main').innerHTML = t.placeholderText.replace(/\n/g, "<br>");
+        }
+
+        function updateDateDisplay() {
+            const dateVal = document.getElementById('customDate').value;
+            if(dateVal) {
+                const parts = dateVal.split('-');
+                document.getElementById('date-display').innerText = `${parts[2]} / ${parts[1]} / ${parts[0]}`;
+            }
+        }
+
+        function adjustAlignment() {
+            const lhVal = document.getElementById('lineHeightSlider').value;
+            const topVal = document.getElementById('topOffsetSlider').value;
+            document.getElementById('lh-val').innerText = lhVal + "px";
+            document.getElementById('top-val').innerText = topVal + "px";
+            const mainText = document.getElementById('text-main');
+            mainText.style.lineHeight = lhVal + "px";
+            mainText.style.top = topVal + "px";
+        }
+
+        function getCanvasOptions() {
+            const qualityScale = parseInt(document.getElementById('qualitySelect').value);
+            return { scale: qualityScale, useCORS: true, allowTaint: true, backgroundColor: null };
+        }
+
+        function prepareElementForExport(element) {
+            const originalTransform = element.style.transform;
+            const originalBoxShadow = element.style.boxShadow;
+            element.style.transform = 'none';
+            element.style.boxShadow = 'none';
+            return { originalTransform, originalBoxShadow };
+        }
+
+        function restoreElementAfterExport(element, originalStyles) {
+            element.style.transform = originalStyles.originalTransform;
+            element.style.boxShadow = originalStyles.originalBoxShadow;
+        }
+
+        // Geçerli ekranı yakalayıp Base64 döndürür
+        async function captureCurrentCanvas() {
+            const element = document.getElementById('export-canvas');
+            const oldStyles = prepareElementForExport(element);
+            try {
+                const canvas = await html2canvas(element, getCanvasOptions());
+                restoreElementAfterExport(element, oldStyles);
+                return canvas.toDataURL('image/png');
+            } catch (err) {
+                restoreElementAfterExport(element, oldStyles);
+                console.error(err);
+                return null;
+            }
+        }
+
+        // Hafızaya Sayfa Ekle
+        async function addPageToMemory() {
+            const btn = document.getElementById('btnAddPage');
+            const originalText = btn.innerText;
+            btn.disabled = true;
+            btn.innerText = dict[currentLang].preparing;
+
+            const dataUrl = await captureCurrentCanvas();
+            if (dataUrl) {
+                pagesMemory.push(dataUrl);
+                document.getElementById('page-count').innerText = pagesMemory.length;
+            }
+
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }
+
+        // Hafızayı Temizle
+        function clearMemory() {
+            pagesMemory = [];
+            document.getElementById('page-count').innerText = "0";
+        }
+
+        // UI Butonlarını kilitleme/açma
+        function setButtonsState(disabled, textKey) {
+            const pngBtn = document.getElementById('pngBtn');
+            const pdfBtn = document.getElementById('pdfBtn');
+            const loadingText = dict[currentLang].preparing;
+
+            if (disabled) {
+                pngBtn.dataset.orig = pngBtn.innerText;
+                pdfBtn.dataset.orig = pdfBtn.innerText;
+                pngBtn.innerText = loadingText;
+                pdfBtn.innerText = loadingText;
+            } else {
+                pngBtn.innerText = pngBtn.dataset.orig || dict[currentLang].png;
+                pdfBtn.innerText = pdfBtn.dataset.orig || dict[currentLang].pdf;
+            }
+            pngBtn.disabled = disabled;
+            pdfBtn.disabled = disabled;
+            document.getElementById('btnAddPage').disabled = disabled;
+        }
+
+        // PNG veya ZIP Export
+        async function exportPNG() {
+            setButtonsState(true);
+
+            // Eğer hafıza boşsa o anki ekranı al, doluysa sadece hafızadakileri al
+            let exportData = pagesMemory.length > 0 ? [...pagesMemory] : [];
+            if (exportData.length === 0) {
+                const current = await captureCurrentCanvas();
+                if (current) exportData.push(current);
+            }
+
+            if (exportData.length === 1) {
+                // Tekil PNG indir
+                const link = document.createElement('a');
+                link.download = 'Scripta_Sayfa.png';
+                link.href = exportData[0];
+                link.click();
+            } else if (exportData.length > 1) {
+                // ZIP oluştur ve indir
+                const zip = new JSZip();
+                exportData.forEach((dataUrl, index) => {
+                    const base64Data = dataUrl.split(',')[1];
+                    zip.file(`Scripta_Sayfa_${index + 1}.png`, base64Data, {base64: true});
+                });
+
+                zip.generateAsync({type:"blob"}).then(function(content) {
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(content);
+                    link.download = 'Scripta_Sayfalar.zip';
+                    link.click();
+                });
+            }
+
+            setButtonsState(false);
+        }
+
+        // PDF Export
+        async function exportPDF() {
+            setButtonsState(true);
+
+            let exportData = pagesMemory.length > 0 ? [...pagesMemory] : [];
+            if (exportData.length === 0) {
+                const current = await captureCurrentCanvas();
+                if (current) exportData.push(current);
+            }
+
+            if (exportData.length > 0) {
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (1123 * pdfWidth) / 794; // A4 Oranını koru
+
+                exportData.forEach((dataUrl, index) => {
+                    if (index > 0) pdf.addPage();
+                    pdf.setPage(index + 1);
+                    pdf.addImage(dataUrl, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                });
+
+                pdf.save('Scripta_Notlar.pdf');
+            }
+
+            setButtonsState(false);
+        }
+    </script>
+</body>
+</html>
