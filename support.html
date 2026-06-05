@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support My Open Source Work</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* GitHub Dark Mode Renkleri */
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --text-main: #c9d1d9;
+            --text-muted: #8b949e;
+            --border-color: #30363d;
+            --accent-blue: #58a6ff;
+            --btn-bg: #238636;
+            --btn-hover: #2ea043;
+            --star-color: #e3b341;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at top, rgba(88, 166, 255, 0.05) 0%, transparent 40%);
+        }
+
+        .support-container {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 480px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Üstteki ince mavi şerit */
+        .support-container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-blue), #bc8cff);
+        }
+
+        /* Dil Seçici */
+        .lang-selector {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 0.8rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .lang-selector:hover {
+            color: var(--text-main);
+            border-color: var(--text-muted);
+        }
+        .lang-selector option {
+            background: var(--card-bg);
+            color: var(--text-main);
+        }
+
+        /* GitHub Avatar */
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            margin-bottom: 20px;
+            background-color: #21262d;
+            padding: 4px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin: 0 0 10px 0;
+            color: #ffffff;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .username {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent-blue);
+            font-size: 1rem;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        p {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+
+        .highlight {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        /* Yıldız Butonu */
+        .star-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            text-decoration: none;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+            margin-bottom: 15px;
+        }
+
+        .star-btn:hover {
+            border-color: var(--text-muted);
+            background-color: #21262d;
+            transform: translateY(-2px);
+        }
+
+        .star-icon {
+            color: var(--star-color);
+            font-size: 1.3rem;
+        }
+
+        /* Takip Et Butonu */
+        .follow-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background-color: var(--btn-bg);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: 1px solid rgba(240, 246, 252, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .follow-btn:hover {
+            background-color: var(--btn-hover);
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+
+        .terminal-prompt {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 15px;
+            background: #0d1117;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        .terminal-prompt span.cursor {
+            display: inline-block;
+            width: 8px;
+            height: 15px;
+            background-color: var(--accent-blue);
+            vertical-align: middle;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink { 50% { opacity: 0; } }
+    </style>
+</head>
+<body>
+
+    <div class="support-container">
+
+        <select id="langSelect" class="lang-selector" onchange="changeLanguage()">
+            <option value="en">EN</option>
+            <option value="tr">TR</option>
+        </select>
+
+        <img src="https://github.com/theyumtt.png" alt="Umut" class="avatar">
+
+        <h1>Umut</h1>
+        <a href="https://github.com/theyumtt" target="_blank" class="username">@theyumtt</a>
+
+        <p id="desc-text">
+            I'm an independent developer building open-source tools, games, and systems.
+            Creating projects like <span class="highlight">Scripta</span>, <span class="highlight">apkg</span>, and custom KDE widgets takes a lot of time and effort.
+            <br><br>
+            If my code has helped you or saved your time, the best way to support me is by starring my repositories!
+        </p>
+
+        <a href="https://github.com/theyumtt/scripta" target="_blank" class="star-btn" id="btn-star">
+            <span class="star-icon">⭐</span> Star Scripta on GitHub
+        </a>
+
+        <a href="https://github.com/theyumtt" target="_blank" class="follow-btn" id="btn-follow">
+            Follow @theyumtt
+        </a>
+
+        <div class="terminal-prompt">
+            <span style="color: #3fb950;">~</span> $ echo "<span id="term-echo">Thank you for your support!</span>"<br>
+            <span style="color: var(--accent-blue);">></span> <span id="term-output">Thank you for your support!</span><span class="cursor"></span>
+        </div>
+
+        <div class="footer" id="footer-text">
+            100% Open Source • Hosted on GitHub Pages
+        </div>
+    </div>
+
+    <script>
+        const translations = {
+            en: {
+                desc: `I'm an independent developer building open-source tools, games, and systems. Creating projects like <span class="highlight">Scripta</span>, <span class="highlight">apkg</span>, and custom KDE widgets takes a lot of time and effort.<br><br>If my code has helped you or saved your time, the best way to support me is by starring my repositories!`,
+                starBtn: `<span class="star-icon">⭐</span> Star Scripta on GitHub`,
+                followBtn: `Follow @theyumtt`,
+                termOutput: `Thank you for your support!`,
+                footer: `100% Open Source • Hosted on GitHub Pages`
+            },
+            tr: {
+                desc: `Açık kaynak araçlar, oyunlar ve sistemler geliştiren bağımsız bir yazılımcıyım. <span class="highlight">Scripta</span>, <span class="highlight">apkg</span> ve özel KDE araçları gibi projeler üretmek ciddi bir zaman ve emek gerektiriyor.<br><br>Eğer yazdığım kodlar işine yaradıysa veya sana zaman kazandırdıysa, bana destek olmanın en güzel yolu depolarımı yıldızlamaktır!`,
+                starBtn: `<span class="star-icon">⭐</span> Scripta'yı Yıldızla`,
+                followBtn: `@theyumtt'yi Takip Et`,
+                termOutput: `Desteğin için teşekkürler!`,
+                footer: `%100 Açık Kaynak • GitHub Pages ile barındırılıyor`
+            }
+        };
+
+        let currentLang = 'en';
+
+        window.onload = function() {
+            // Tarayıcı dilini algıla
+            const userLang = navigator.language || navigator.userLanguage;
+            if (userLang.toLowerCase().startsWith('tr')) {
+                currentLang = 'tr';
+            } else {
+                currentLang = 'en';
+            }
+
+            document.getElementById('langSelect').value = currentLang;
+            applyTranslations();
+        };
+
+        function changeLanguage() {
+            currentLang = document.getElementById('langSelect').value;
+            applyTranslations();
+        }
+
+        function applyTranslations() {
+            const t = translations[currentLang];
+            document.getElementById('desc-text').innerHTML = t.desc;
+            document.getElementById('btn-star').innerHTML = t.starBtn;
+            document.getElementById('btn-follow').innerText = t.followBtn;
+            document.getElementById('term-echo').innerText = t.termOutput;
+            document.getElementById('term-output').innerText = t.termOutput;
+            document.getElementById('footer-text').innerText = t.footer;
+        }
+    </script>
+</body>
+</html>
+<!--  -->
