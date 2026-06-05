@@ -3,76 +3,228 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>theyumtt | Projelerim</title>
-    <style>
-        :root { --bg: #0d1117; --text: #c9d1d9; --accent: #58a6ff; --card-bg: #161b22; }
-        body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; overflow: hidden; }
-        .card { text-align: center; padding: 2.5rem; border: 1px solid #30363d; border-radius: 12px; background: var(--card-bg); box-shadow: 0 8px 24px rgba(0,0,0,0.5); max-width: 350px; width: 90%; transition: transform 0.2s; }
-        .card:hover { transform: translateY(-5px); }
-        .logo { width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--accent); padding: 4px; margin-bottom: 15px; object-fit: cover; }
-        h1 { font-size: 1.5rem; margin: 10px 0; color: white; }
-        p { font-size: 0.95rem; margin-bottom: 25px; color: #8b949e; }
+    <title>Umut | Projelerim</title>
 
-        /* Projeleri alt alta düzgün dizmek için kapsayıcı */
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0d1117;
+            --text: #c9d1d9;
+            --accent: #58a6ff;
+            --card-bg: #161b22;
+            --border-color: #30363d;
+        }
+
+        body {
+            background-color: var(--bg);
+            /* Arka plana modern bir derinlik katar */
+            background-image: radial-gradient(circle at top left, rgba(88, 166, 255, 0.08) 0%, transparent 40%),
+                              radial-gradient(circle at bottom right, rgba(88, 166, 255, 0.05) 0%, transparent 40%);
+            color: var(--text);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .card {
+            text-align: center;
+            padding: 2.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            background: var(--card-bg);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.6);
+            max-width: 380px;
+            width: 90%;
+            position: relative;
+            animation: fadeUpCard 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Kartın üstündeki mavi parlak çizgi */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            background: linear-gradient(90deg, var(--accent), #bc8cff);
+        }
+
+        /* Profil Fotoğrafı ve Pulse Efekti */
+        .logo-container {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 15px auto;
+        }
+        .logo {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid var(--card-bg);
+            object-fit: cover;
+            position: relative;
+            z-index: 2;
+            background-color: #21262d;
+        }
+        .logo-container::after {
+            content: '';
+            position: absolute;
+            top: -4px; left: -4px; right: -4px; bottom: -4px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--accent), #bc8cff);
+            z-index: 1;
+            animation: pulseGlow 2s infinite alternate;
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            margin: 10px 0 5px 0;
+            color: #ffffff;
+            font-weight: 800;
+        }
+
+        .username {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+
+        /* Teknolojiler / Badges */
+        .badges {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        .badge {
+            background-color: #21262d;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Projeler Listesi */
         .projects-list {
             display: flex;
             flex-direction: column;
-            gap: 12px; /* Projeler arası dikey boşluk */
+            gap: 12px;
             width: 100%;
         }
 
         .button-group {
             display: flex;
-            align-items: center;
+            align-items: stretch;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
             width: 100%;
+            opacity: 0; /* Animasyon için başlangıçta görünmez */
+            transform: translateY(10px);
+            animation: fadeUpItem 0.5s forwards;
         }
+
+        /* Staggered (Sıralı) Animasyon Gecikmeleri */
+        .button-group:nth-child(1) { animation-delay: 0.2s; }
+        .button-group:nth-child(2) { animation-delay: 0.3s; }
+        .button-group:nth-child(3) { animation-delay: 0.4s; }
+        .button-group:nth-child(4) { animation-delay: 0.5s; }
 
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            padding: 10px 20px;
-            border-radius: 6px;
-            background: var(--accent);
-            color: white;
+            gap: 10px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            background: #21262d;
+            border: 1px solid var(--border-color);
+            color: var(--text);
             text-decoration: none;
             font-size: 0.95rem;
-            font-weight: bold;
-            transition: background 0.2s;
-            flex-grow: 1; /* Ana butonların eşit genişlikte uzamasını sağlar */
+            font-weight: 600;
+            transition: all 0.2s ease;
+            flex-grow: 1;
         }
-        .btn:hover { background: #3c8ce7; }
+
+        .btn:hover {
+            background: #30363d;
+            border-color: var(--accent);
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(88, 166, 255, 0.1);
+        }
+
+        .btn svg {
+            color: var(--accent);
+            transition: color 0.2s ease;
+        }
 
         .btn-icon {
-            padding: 10px;
+            padding: 12px;
             gap: 0;
-            flex-grow: 0; /* İkon butonunun genişlemesini engeller */
+            flex-grow: 0;
+            background: var(--bg);
+        }
+        .btn-icon:hover svg {
+            color: #ffffff;
         }
 
-        .error { color: #ff7b72 !important; }
-        .error-bar { background: #ff7b72 !important; }
+        /* Keyframes */
+        @keyframes fadeUpCard {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeUpItem {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulseGlow {
+            from { opacity: 0.6; filter: blur(4px); }
+            to { opacity: 1; filter: blur(6px); }
+        }
     </style>
 </head>
 <body>
     <div class="card">
-        <h1>Projelerim</h1>
-        <p>@theyumtt</p>
+
+        <div class="logo-container">
+            <img src="https://github.com/theyumtt.png" alt="Umut" class="logo">
+        </div>
+
+        <h1>Umut</h1>
+        <div class="username">@theyumtt</div>
+
+        <div class="badges">
+            <span class="badge">Linux</span>
+            <span class="badge">Python</span>
+            <span class="badge">Rust</span>
+            <span class="badge">Godot Engine</span>
+        </div>
 
         <div class="projects-list">
 
             <div class="button-group">
                 <a href="https://theyumtt.github.io/scripta" class="btn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="2" y1="12" x2="22" y2="12"></line>
-                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                        <path d="M12 20h9"></path>
+                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
                     </svg>
-                    Projem | Scripta
+                    Scripta
                 </a>
-                <a href="https://github.com/theyumtt/theyumtt.github.io/tree/main/scripta" class="btn btn-icon" title="GitHub'da Gör">
+                <a href="https://github.com/theyumtt/scripta" class="btn btn-icon" title="GitHub'da Gör">
                     <svg height="20" width="20" viewBox="0 0 16 16" fill="currentColor">
                         <path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82A7.833 7.833 0 0 0 8 3.84c-.68.01-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.34 2.44.83 0 .65.01 1.27.01 1.45 0 .21-.15.46-.55.38A8.01 8.01 0 0 1 0 8c0-4.42 3.58-8 8-8z"></path>
                     </svg>
@@ -83,8 +235,7 @@
                 <a href="https://github.com/theyumtt/kde_modernclockTR" class="btn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="2" y1="12" x2="22" y2="12"></line>
-                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                        <polyline points="12 6 12 12 16 14"></polyline>
                     </svg>
                     KDE Modern Clock TR
                 </a>
@@ -98,9 +249,9 @@
             <div class="button-group">
                 <a href="https://github.com/theyumtt/easyportableinstall" class="btn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="2" y1="12" x2="22" y2="12"></line>
-                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
                     </svg>
                     Easy Portable Install
                 </a>
@@ -114,9 +265,8 @@
             <div class="button-group">
                 <a href="https://github.com/theyumtt/javamanager-linux" class="btn">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="2" y1="12" x2="22" y2="12"></line>
-                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                        <polyline points="16 18 22 12 16 6"></polyline>
+                        <polyline points="8 6 2 12 8 18"></polyline>
                     </svg>
                     Java Manager Linux
                 </a>
