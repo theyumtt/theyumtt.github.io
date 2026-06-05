@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scripta - Dijital Not Üretici</title>
 
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
 
+    <!-- Kütüphaneler: PDF, Canvas ve ZIP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -73,6 +75,29 @@
         .memory-box .btn-add:hover { background-color: #157347; }
         .memory-box .btn-clear { background-color: #6c757d; font-size: 0.85rem; width: 100%; margin-top: 5px; padding: 8px;}
         .memory-box .btn-clear:hover { background-color: #5c636a; }
+
+        /* --- DESTEK KUTUSU CSS --- */
+        .support-box {
+            margin-top: auto; /* Menünün en altına iter */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px;
+            background-color: #fdf3f5;
+            color: #d81159;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            border: 1px solid #f8d7df;
+            transition: all 0.2s ease-in-out;
+        }
+        .support-box:hover {
+            background-color: #fce2e8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(216, 17, 89, 0.15);
+        }
 
         /* Sağ Alan (Önizleme) */
         .preview-container {
@@ -188,6 +213,7 @@
             <input type="date" id="customDate" onchange="updateDateDisplay()">
         </div>
 
+        <!-- Çoklu Sayfa Sistemi -->
         <div class="memory-box">
             <span id="lbl-pagecounttext">Pages in Memory:</span> <span id="page-count">0</span>
             <button id="btnAddPage" class="btn-add" onclick="addPageToMemory()">➕ Add Page</button>
@@ -217,9 +243,15 @@
         <button id="pngBtn" onclick="exportPNG()">🖼️ Download PNG(s)</button>
         <button id="pdfBtn" class="pdf-btn" onclick="exportPDF()">📄 Download PDF</button>
 
+        <!-- DESTEK KUTUSU (Linkini değiştirmeyi unutma!) -->
+        <a href="https://theyumtt.github.io/support" target="_blank" class="support-box">
+            ☕ <span id="lbl-support">Support to keep it ad-free!</span>
+        </a>
+
     </div>
 
     <div class="preview-container">
+        <!-- İndirilecek Olan Tuval -->
         <div id="export-canvas" class="canvas-area preset-notebook">
             <div class="title-box" id="text-title" contenteditable="true">TITLE GOES HERE</div>
             <div class="date-box" id="date-display" contenteditable="true">04.06.2026</div>
@@ -236,7 +268,7 @@
     </div>
 
     <script>
-        // Sayfa Hafızası (DataURL'leri Tutar)
+        // Sayfa Hafızası
         let pagesMemory = [];
 
         const dict = {
@@ -255,6 +287,7 @@
                 png: "🖼️ PNG İndir",
                 pdf: "📄 PDF İndir",
                 preparing: "⏳ İşleniyor...",
+                support: "Reklamsız kalması için destek ol 💖",
                 quoteText: "“Büyük şeyleri büyük milletler yapar.”",
                 quoteAuthor: "MUSTAFA KEMAL ATATÜRK",
                 placeholderTitle: "BAŞLIK BURAYA",
@@ -275,6 +308,7 @@
                 png: "🖼️ Download PNG(s)",
                 pdf: "📄 Download PDF",
                 preparing: "⏳ Processing...",
+                support: "Support to keep it ad-free 💖",
                 quoteText: "“Great things are done by great nations.”",
                 quoteAuthor: "MUSTAFA KEMAL ATATÜRK",
                 placeholderTitle: "TITLE GOES HERE",
@@ -324,6 +358,7 @@
             document.getElementById('lbl-quality').innerText = t.quality;
             document.getElementById('pngBtn').innerText = t.png;
             document.getElementById('pdfBtn').innerText = t.pdf;
+            document.getElementById('lbl-support').innerText = t.support;
 
             document.getElementById('quote-text').innerText = t.quoteText;
             document.getElementById('quote-author').innerText = t.quoteAuthor;
@@ -367,7 +402,6 @@
             element.style.boxShadow = originalStyles.originalBoxShadow;
         }
 
-        // Geçerli ekranı yakalayıp Base64 döndürür
         async function captureCurrentCanvas() {
             const element = document.getElementById('export-canvas');
             const oldStyles = prepareElementForExport(element);
@@ -382,7 +416,6 @@
             }
         }
 
-        // Hafızaya Sayfa Ekle
         async function addPageToMemory() {
             const btn = document.getElementById('btnAddPage');
             const originalText = btn.innerText;
@@ -399,13 +432,11 @@
             btn.disabled = false;
         }
 
-        // Hafızayı Temizle
         function clearMemory() {
             pagesMemory = [];
             document.getElementById('page-count').innerText = "0";
         }
 
-        // UI Butonlarını kilitleme/açma
         function setButtonsState(disabled, textKey) {
             const pngBtn = document.getElementById('pngBtn');
             const pdfBtn = document.getElementById('pdfBtn');
@@ -425,11 +456,9 @@
             document.getElementById('btnAddPage').disabled = disabled;
         }
 
-        // PNG veya ZIP Export
         async function exportPNG() {
             setButtonsState(true);
 
-            // Eğer hafıza boşsa o anki ekranı al, doluysa sadece hafızadakileri al
             let exportData = pagesMemory.length > 0 ? [...pagesMemory] : [];
             if (exportData.length === 0) {
                 const current = await captureCurrentCanvas();
@@ -437,13 +466,11 @@
             }
 
             if (exportData.length === 1) {
-                // Tekil PNG indir
                 const link = document.createElement('a');
                 link.download = 'Scripta_Sayfa.png';
                 link.href = exportData[0];
                 link.click();
             } else if (exportData.length > 1) {
-                // ZIP oluştur ve indir
                 const zip = new JSZip();
                 exportData.forEach((dataUrl, index) => {
                     const base64Data = dataUrl.split(',')[1];
@@ -461,7 +488,6 @@
             setButtonsState(false);
         }
 
-        // PDF Export
         async function exportPDF() {
             setButtonsState(true);
 
@@ -475,7 +501,7 @@
                 const { jsPDF } = window.jspdf;
                 const pdf = new jsPDF('p', 'mm', 'a4');
                 const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (1123 * pdfWidth) / 794; // A4 Oranını koru
+                const pdfHeight = (1123 * pdfWidth) / 794;
 
                 exportData.forEach((dataUrl, index) => {
                     if (index > 0) pdf.addPage();
