@@ -1,7 +1,7 @@
-## 🌐 theyumtt.github.io Haritası
+## 🌐 theyumtt.github.io Sitemap
 
-| Bölüm / Sayfa | Bağlantı | Açıklama |
+| Section / Page | Link | Description |
 | :--- | :--- | :--- |
-| **Ana Sayfa** | [theyumtt.github.io](https://theyumtt.github.io) | Sitenin ana açılış sayfası. |
-| **Scripta** | [/scripta](https://theyumtt.github.io/scripta) | Scripta Online'nın bulunduğu bölüm. |
-| **Destek Ol** | [/support](https://theyumtt.github.io/support) | Destek ol! |
+| **Home** | [theyumtt.github.io](https://theyumtt.github.io) | The main homepage of the site. |
+| **Scripta** | [/scripta](https://theyumtt.github.io/scripta) | The section where Scripta Online is located. |
+| **Support Us** | [/support](https://theyumtt.github.io/support) | Support us! |
