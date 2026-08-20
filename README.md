@@ -1,6 +1,5 @@
-## theyumtt.github.io - MAIN LINKS
+## 🔗 Ana Bağlantılar (Main Links)
 
-theyumtt.github.io
-theyumtt.github.io/scripta
-theyumtt.github.io/support
-theyumtt.github.io/404
+- 🏠 [**Ana Sayfa**](https://theyumtt.github.io)
+- 📜 [**Scripta**](https://theyumtt.github.io/scripta)
+- 🛠️ [**Destek Ol! (Support)**](https://theyumtt.github.io/support)
