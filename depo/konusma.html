@@ -42,7 +42,7 @@
 </head>
 <body>
     <h1>Speech Jammer</h1>
-    <p>Gecikme: 200 Milisaniye</p>
+    <p>Gecikme: 150 Milisaniye</p>
     
     <button id="toggleBtn">Sistemi Başlat</button>
     
@@ -70,7 +70,7 @@
 
                     // Gecikme efekti oluştur ve 0.2 saniye (200ms) olarak ayarla
                     delayNode = audioContext.createDelay();
-                    delayNode.delayTime.value = 0.2; 
+                    delayNode.delayTime.value = 0.15; 
 
                     // Bağlantı Rotası: Mikrofon -> Gecikme -> Kulaklık(Çıkış)
                     microphone.connect(delayNode);
