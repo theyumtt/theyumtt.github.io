@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Speech Jammer</title>
+    <style>
+        body { 
+            font-family: system-ui, sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            background-color: #1a1a2e; 
+            color: #ffffff; 
+            margin: 0;
+        }
+        button { 
+            padding: 20px 40px; 
+            font-size: 24px; 
+            font-weight: bold;
+            cursor: pointer; 
+            border-radius: 12px; 
+            border: none; 
+            background: #0f3460; 
+            color: white; 
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+        button.active { 
+            background: #e94560; 
+        }
+        .warning { 
+            color: #f9a826; 
+            margin-top: 20px; 
+            text-align: center; 
+            max-width: 80%; 
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Speech Jammer</h1>
+    <p>Gecikme: 200 Milisaniye</p>
+    
+    <button id="toggleBtn">Sistemi Başlat</button>
+    
+    <p class="warning">⚠️ DİKKAT: Başlatmadan önce mutlaka <b>KULAKLIK TAKIN</b>! Aksi takdirde mikrofon ve hoparlör sonsuz yankı (feedback) döngüsüne girer.</p>
+
+    <script>
+        let audioContext;
+        let microphone;
+        let delayNode;
+        let isRunning = false;
+
+        const btn = document.getElementById('toggleBtn');
+
+        btn.addEventListener('click', async () => {
+            if (!isRunning) {
+                try {
+                    // Modern tarayıcılarda ses motorunu başlat (Kullanıcı etkileşimi şarttır)
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+                    // Mikrofondan ses akışını (stream) iste
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+                    // Sesi Web Audio API'ye bağla
+                    microphone = audioContext.createMediaStreamSource(stream);
+
+                    // Gecikme efekti oluştur ve 0.2 saniye (200ms) olarak ayarla
+                    delayNode = audioContext.createDelay();
+                    delayNode.delayTime.value = 0.2; 
+
+                    // Bağlantı Rotası: Mikrofon -> Gecikme -> Kulaklık(Çıkış)
+                    microphone.connect(delayNode);
+                    delayNode.connect(audioContext.destination);
+
+                    isRunning = true;
+                    btn.textContent = "Sistemi Durdur";
+                    btn.classList.add("active");
+
+                } catch (err) {
+                    alert("Mikrofon erişimi reddedildi veya bir hata oluştu:\n" + err);
+                }
+            } else {
+                // Sistemi ve mikrofonu kapat
+                if (audioContext) {
+                    audioContext.close();
+                }
+                isRunning = false;
+                btn.textContent = "Sistemi Başlat";
+                btn.classList.remove("active");
+            }
+        });
+    </script>
+</body>
+</html>
